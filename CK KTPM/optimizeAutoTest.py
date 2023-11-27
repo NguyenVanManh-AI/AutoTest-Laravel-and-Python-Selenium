@@ -9,6 +9,15 @@ import time
 # driver = webdriver.Edge()
 driver = webdriver.Chrome() # sử dụng gg chrome thay vì edge 
 
+def go_article():
+    li_element = get_element(By.ID, 'list_6')
+    li_element.click()
+    li_element.click()
+
+def go_article_create():
+    add_btn = get_element(By.ID, 'btn_add_article')
+    add_btn.click()
+
 def get_element(by, selector):
     return WebDriverWait(driver, 10).until(EC.presence_of_element_located((by, selector)))
 
@@ -16,7 +25,7 @@ def get_elements(by, selector):
     return WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((by, selector)))
 
 def delete_article(nth):
-    driver.get("http://localhost:4200/admin/article")
+    go_article()
     btn_deletes = get_elements(By.CLASS_NAME, 'btn.btn-sm.btn-danger.ml-8')
     btn_delete = btn_deletes[nth]
     btn_delete.click()
@@ -26,7 +35,7 @@ def delete_article(nth):
     time.sleep(2) 
 
 def hidden_article(nth):
-    driver.get("http://localhost:4200/admin/article")
+    go_article()
     btn_hiddens = get_elements(By.CLASS_NAME, 'btn.btn-sm.btn-success.ml-8.ng-star-inserted')
     btn_hidden = btn_hiddens[nth]
     btn_hidden.click()
@@ -36,7 +45,7 @@ def hidden_article(nth):
     time.sleep(2) 
 
 def accept_article(nth):
-    driver.get("http://localhost:4200/admin/article")
+    go_article()
     btn_accepts = get_elements(By.CLASS_NAME, 'btn.btn-sm.btn-success.ng-star-inserted')
     btn_accept = btn_accepts[nth]
     btn_accept.click()
@@ -48,7 +57,8 @@ def accept_article(nth):
 
 def create_article(title, content, img, category):
     time.sleep(2)
-    driver.get("http://localhost:4200/admin/article/create")
+    go_article()
+    go_article_create()
 
     title_input = get_element(By.CSS_SELECTOR, '[ng-reflect-name="title"]')
     title_input.send_keys(title)
@@ -74,7 +84,7 @@ def create_article(title, content, img, category):
     time.sleep(2)
 
 def edit_article(title, content, img, category):
-    driver.get("http://localhost:4200/admin/article")
+    go_article()
     btn_edits = get_elements(By.CLASS_NAME, 'btn.btn-sm.btn-primary.ml-8')
     btn_edit = btn_edits[0]
     btn_edit.click()
@@ -105,21 +115,20 @@ def edit_article(title, content, img, category):
     submit_button.click()
 
 def login(email, password):
-    driver.get("http://localhost:4200/auth/sign-in")
-    # login_button = get_element(By.CSS_SELECTOR, ".btn-outline-gray.btn-login.ng-star-inserted")
-    # ActionChains(driver).move_to_element(login_button).click().perform()
-    driver.maximize_window()
-
+    driver.refresh()
     email_input = get_element(By.CSS_SELECTOR, '[ng-reflect-name="email"]')
     password_input = get_element(By.CSS_SELECTOR, '[ng-reflect-name="password"]')
+    email_input.clear() 
+    password_input.clear() 
 
+    show = get_element(By.ID, 'toggleButton')
+    show.click()
+    
     if(email):
-        email_input.clear() 
         email_input.send_keys(email)
 
     time.sleep(2)
     if(password):
-        password_input.clear() 
         password_input.send_keys(password)
 
     btn_submits = get_elements(By.CLASS_NAME, 'btn.btn-secondary.d-flex.justify-content-center')
@@ -129,6 +138,8 @@ def login(email, password):
     time.sleep(2)
 
 def page():
+    go_article()
+    time.sleep(2)
     # cuộn đến cuối trang 
     body = driver.find_element(By.TAG_NAME, "body")
     body.send_keys(Keys.END)
@@ -145,21 +156,23 @@ def page():
     time.sleep(2)
 
 try:
-    driver.get("http://localhost:4200/")
-
     # LOGIN 
+    driver.maximize_window()
+    driver.get("http://localhost:4200")
+    login_button = get_element(By.CSS_SELECTOR, ".btn-outline-gray.btn-login.ng-star-inserted")
+    ActionChains(driver).move_to_element(login_button).click().perform()
+
+    time.sleep(2)
     login(None, "123456")
     login("benhviengiadinh@yopmail.com", None)
+    login("benhviengiadinh7@yopmail.com", "1234567")
     login("benhviengiadinh@yopmail.com", "123456")
-
-    driver.get("http://localhost:4200/admin/article")
     time.sleep(2)
 
     for i in range(5):
         #PAGE
         page()
         # CREATE 
-        # create_article("Nội dung của bài viết !", "Nội dung của bài viết !", r"c:\Users\ADMIN\Downloads\Infinity\abinhyen2.jpg", 2)
         create_article('', "Nội dung của bài viết !", r"c:\Users\ADMIN\Downloads\Infinity\abinhyen2.jpg", 2)
         create_article("Tiêu đề của bài viết !", "", r"c:\Users\ADMIN\Downloads\Infinity\abinhyen2.jpg", 2)
         create_article('Tiêu đề của bài viết !', "Nội dung của bài viết !", None, 2)
