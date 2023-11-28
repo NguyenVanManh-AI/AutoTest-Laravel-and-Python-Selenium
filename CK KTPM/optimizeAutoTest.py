@@ -179,6 +179,7 @@ try:
         create_article("Nội dung của bài viết !", "Nội dung của bài viết !", r"c:\Users\ADMIN\Downloads\Infinity\abinhyen2.jpg", None)
         create_article("Nội dung của bài viết !", "Nội dung của bài viết !", r"c:\Users\ADMIN\Downloads\Infinity\abinhyen2.jpg", 2)
         # EDIT
+        edit_article("Cập nhật Tiêu đề của bài viết !", "", r"c:\Users\ADMIN\Downloads\Infinity\an.jpg", 0)
         edit_article("Cập nhật Tiêu đề của bài viết !", "Cập nhật Nội dung của bài viết !", r"c:\Users\ADMIN\Downloads\Infinity\an.jpg", 0)
         # HIDDEN 
         hidden_article(0)
